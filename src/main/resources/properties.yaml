@@ -11,18 +11,4 @@ spring:
     spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
   h2:
     console:
-      enabled: true
-
-externalApi:
-  tvMaze:
-    url: https://api.tvmaze.com
-  lastFM:
-    url: http://ws.audioscrobbler.com/2.0
-  customerService:
-    url: localhost:8082
-
-redis:
-  host: localhost
-  port: 6380
-  ttl: 1000
-
+    enabled: true
