@@ -1,13 +1,14 @@
 package com.firstProject.repository;
 
-import com.firstProject.model.PollQuestion;
+import com.firstProject.model.Question;
 
 import java.util.List;
 
 public interface QuestionRepository {
-    Long createQuestion (PollQuestion question);
-    PollQuestion updateQuestion (PollQuestion question);
-    void DeleteQuestion (Long id);
-    PollQuestion getQuestionById(Long id);
-    List <PollQuestion> getQuestionsList();
+    Long createQuestion (Question question);
+    Question updateQuestion (Question question);
+    void deleteQuestion(Long id);
+
+    Question getQuestionById(Long id);
+    List<Question> getQuestionsList();
 }

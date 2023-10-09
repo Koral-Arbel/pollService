@@ -1,21 +1,21 @@
 package com.firstProject.repository.mapper;
 
-import com.firstProject.model.PollOption;
-import com.firstProject.model.PollQuestion;
+import com.firstProject.model.Question;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
-public class QuestionMapper implements RowMapper <PollQuestion> {
+@Component
+public class QuestionMapper implements RowMapper <Question> {
 
     @Override
-    public PollQuestion mapRow(ResultSet rs, int rowNum) throws SQLException {
-        PollQuestion pollQuestion = new PollQuestion(
+    public Question mapRow(ResultSet rs, int rowNum) throws SQLException {
+        Question question = new Question(
                 rs.getLong("id"),
                 rs.getString("title")
         );
-        return pollQuestion;
+        return question;
     }
 }

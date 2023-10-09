@@ -1,6 +1,6 @@
 package com.firstProject.repository.mapper;
 
-import com.firstProject.model.PollOption;
+import com.firstProject.model.Option;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -8,13 +8,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Component
-public class OptionMapper implements RowMapper<PollOption> {
+public class OptionMapper implements RowMapper<Option> {
+
 
     @Override
-    public PollOption mapRow(ResultSet rs, int rowNum) throws SQLException {
-        System.out.println("I'm inside the user mapper");
-        PollOption pollOption = new PollOption(
-        );
-        return pollOption;
+    public Option mapRow(ResultSet rs, int rowNum) throws SQLException {
+        Option option = new Option(
+                rs.getLong("id"),
+                rs.getString("option"),
+                rs.getLong("question_id"));
+        return option;
     }
 }
+

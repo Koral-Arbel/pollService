@@ -1,14 +1,13 @@
 package com.firstProject.model;
 
-public class QuestionOptionRequest {
+public class QuestionOptionResponse {
     private Question question;
     private Option option1;
     private Option option2;
     private Option option3;
     private Option option4;
 
-
-    public QuestionOptionRequest(Question question, Option option1, Option option2, Option option3, Option option4) {
+    public QuestionOptionResponse(Question question, Option option1, Option option2, Option option3, Option option4) {
         this.question = question;
         this.option1 = option1;
         this.option2 = option2;
@@ -54,20 +53,5 @@ public class QuestionOptionRequest {
 
     public void setOption4(Option option4) {
         this.option4 = option4;
-    }
-
-    public Question toQuestion(Question question) {
-        return new Question(
-                question.getId(),
-                question.getTitle()
-        );
-    }
-
-    public Option toOptions(Option option, Long questionId) {
-        return new Option(
-                option.getId(),
-                option.getTextOption(),
-                questionId
-        );
     }
 }

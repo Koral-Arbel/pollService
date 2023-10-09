@@ -1,14 +1,14 @@
 package com.firstProject.repository;
 
-import com.firstProject.model.PollOption;
-import com.firstProject.model.UserAnswer;
+import com.firstProject.model.Option;
 
 import java.util.List;
 
 public interface OptionRepository {
-    Long createOption(UserAnswer userAnswer);
-    void updateOption (UserAnswer userAnswer);
+    Long createOption(Option option);
+    void updateOption (Option option);
     void deleteOptionFromAnswer(Long id);
-    PollOption getOptionById(Long id);
-    List<PollOption> getOptionsByQuestionId(Long questionId);
+    Option getOptionById(Long id);
+    List<Option> getOptionsByQuestionId(Long questionId);
+
 }
