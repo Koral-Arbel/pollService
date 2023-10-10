@@ -15,7 +15,7 @@ public class OptionMapper implements RowMapper<Option> {
     public Option mapRow(ResultSet rs, int rowNum) throws SQLException {
         Option option = new Option(
                 rs.getLong("id"),
-                rs.getString("option"),
+                rs.getString("text_option"),
                 rs.getLong("question_id"));
         return option;
     }

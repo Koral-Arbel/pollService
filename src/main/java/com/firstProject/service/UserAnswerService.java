@@ -14,6 +14,6 @@ public interface UserAnswerService {
         QuestionOptionSelectedResponse getUsersChoseQuestionOptionNumber(Long questionId);
         Integer getNumberOfQuestionsUserAnswered(Long userId);
         List<QuestionOptionSelectedResponse> getAllQuestionsAndAnswerSelectedCount();
-        List<UserQuestionAnswerResponse> getAllUserAnswers(Long userId);
+        List<UserAnswerResponse> getAllUserAnswers(Long userId);
 
 }

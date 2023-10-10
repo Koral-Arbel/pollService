@@ -18,14 +18,14 @@ public class OptionRepositoryImpl implements OptionRepository {
 
     @Override
     public Long createOption(Option option) {
-        String sql="INSERT INTO " + TABLE_NAME_OPTION + "(answer, question_id) VALUES(?,?)";
+        String sql="INSERT INTO " + TABLE_NAME_OPTION + "(text_option, question_id) VALUES(?, ?)";
         jdbcTemplate.update(sql,option.getTextOption(),option.getQuestionId());
         return jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
     }
 
     @Override
     public void updateOption(Option option) {
-        String sql="UPDATE " + TABLE_NAME_OPTION +" SET answer=? WHERE id=?";
+        String sql="UPDATE " + TABLE_NAME_OPTION +" SET text_option=? WHERE id=?";
         jdbcTemplate.update(sql,option.getTextOption(),option,option.getId());
     }
 
@@ -48,7 +48,7 @@ public class OptionRepositoryImpl implements OptionRepository {
 
     @Override
     public List<Option> getOptionsByQuestionId(Long questionId) {
-        String sql="Select * From "+ TABLE_NAME_OPTION +" WHERE question_id=?";
+        String sql="SELECT * FROM "+ TABLE_NAME_OPTION +" WHERE question_id=?";
         try {
             return jdbcTemplate.query(sql,new OptionMapper(),questionId);
         }catch (EmptyResultDataAccessException exception){

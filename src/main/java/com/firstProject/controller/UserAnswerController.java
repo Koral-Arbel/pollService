@@ -9,7 +9,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(value = "/UserQuestionAnswer")
+@RequestMapping(value = "/userQuestionAnswer")
 public class UserAnswerController {
 
 
@@ -57,7 +57,7 @@ public class UserAnswerController {
     }
 
     @GetMapping(value = "/userAnswersAll/{userId}")
-    public List<UserQuestionAnswerResponse> getAllUserAnswers(@PathVariable Long userId){
+    public List<UserAnswerResponse> getAllUserAnswers(@PathVariable Long userId){
         return userAnswerService.getAllUserAnswers(userId);
     }
 }

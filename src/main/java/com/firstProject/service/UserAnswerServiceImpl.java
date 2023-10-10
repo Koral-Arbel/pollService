@@ -1,9 +1,8 @@
 package com.firstProject.service;
 
 import com.firstProject.model.*;
-import com.firstProject.repository.UserAnswerRepository;
+import com.firstProject.repository.UserAnswerRepositoryImpl;
 import com.firstProject.userService.UserService;
-import org.h2.engine.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,23 +12,35 @@ import java.util.List;
 @Service
 public class UserAnswerServiceImpl implements UserAnswerService {
     @Autowired
-    UserAnswerRepository userAnswerRepository;
+    UserAnswerRepositoryImpl userAnswerRepository;
     @Autowired
     UserService userService;
     @Autowired
     PollQuestionService questionService;
     @Autowired
-    PollOptionService answerService;
+    PollOptionService optionService;
 
 
     @Override
     public void createUserAnswer(UserAnswerRequest userAnswerRequest) {
-        User user = userService.getUserByEmail(userAnswerRequest.getEmail());
+        UserAnswer user = userService.getUserAnswerByEmail(userAnswerRequest.getEmail());
+
+        if (user != null && !checkIfUserAnsweredQuestionByUserIdAndQuestionId(user.getUserId(), userAnswerRequest.getQuestionOptionRequest().getQuestion().getId())) {
+            boolean isRegistered = userService.getRegistered(); // נשתמש ישירות בערך במשתנה בוליאני
+
+            if (isRegistered) {
+                userAnswerRepository.createUserAnswer(userAnswerRequest.toUserAnswer(
+                        user.getUserId(),
+                        userAnswerRequest.getQuestionOptionRequest().getQuestion().getId(),
+                        userAnswerRequest.getOption().getId()
+                ));
+            }
+        }
     }
 
     @Override
     public void updateUserAnswer(UserAnswerRequest userAnswerRequest) {
-        User user = userService.getUserByEmail(userAnswerRequest.getEmail());
+        UserAnswer user = userService.getUserAnswerByEmail(userAnswerRequest.getEmail());
     }
 
     @Override
@@ -69,7 +80,7 @@ public class UserAnswerServiceImpl implements UserAnswerService {
         answers.add(new OptionSelected(question.getOption4().getTextOption(), 0));
 
         for (int i = 0; i < answerChosenToMaps.size(); i++) {
-            Option option = answerService.getOptionById(answerChosenToMaps.get(i).getAnswerId());
+            Option option = optionService.getOptionById(answerChosenToMaps.get(i).getAnswerId());
             for (int x = 0; x < answers.size(); x++) {
                 if (answers.get(x).getTextOption() == option.getTextOption()) {
                     answers.get(x).setSelectedAnswer(answerChosenToMaps.get(i).getCountingAnswers());
@@ -101,14 +112,14 @@ public class UserAnswerServiceImpl implements UserAnswerService {
     }
 
     @Override
-    public List<UserQuestionAnswerResponse> getAllUserAnswers(Long userId) {
-        List<UserQuestionAnswerResponse> responseList=new ArrayList<>();
+    public List<UserAnswerResponse> getAllUserAnswers(Long userId) {
+        List<UserAnswerResponse> responseList=new ArrayList<>();
         List<UserAnswer> list=userAnswerRepository.getAllUserAnswers(userId);
 
         for(var questionAnswer:list){
             String question=questionService.getQuestionById(questionAnswer.getQuestionId()).getQuestion().getTitle();
-            String answer=answerService.getOptionById(questionAnswer.getQuestionId()).getTextOption();
-            responseList.add(new UserQuestionAnswerResponse(question,answer));
+            String answer= optionService.getOptionById(questionAnswer.getQuestionId()).getTextOption();
+            responseList.add(new UserAnswerResponse());
         }
         return responseList;
     }

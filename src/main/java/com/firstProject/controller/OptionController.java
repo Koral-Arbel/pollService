@@ -12,17 +12,17 @@ public class OptionController {
     @Autowired
     private PollOptionService optionService;
 
-    @PostMapping(value = "/answer/create")
+    @PostMapping(value = "/option/create")
     public Option createAnswer(@RequestBody Option option){
         return optionService.createOption(option);
     }
 
-    @PutMapping(value = "/answer/{answerId}/update")
+    @PutMapping(value = "/option/{optionId}/update")
     public Option updateOption(@RequestBody Option option, @PathVariable Long optionId){
         return optionService.updateOption(option);
     }
 
-    @DeleteMapping(value = "/answer/{optionId}/delete")
+    @DeleteMapping(value = "/option/{optionId}/delete")
     public void deleteOption(@PathVariable Long optionId){
         optionService.deleteOption(optionId);
     }

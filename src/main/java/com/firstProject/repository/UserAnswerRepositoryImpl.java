@@ -2,8 +2,10 @@ package com.firstProject.repository;
 
 import com.firstProject.model.OptionSelectedToMapper;
 import com.firstProject.model.UserAnswer;
+import com.firstProject.model.UserAnswerResponse;
 import com.firstProject.repository.mapper.OptionSelectedMapper;
 import com.firstProject.repository.mapper.UserAnswerMapper;
+import com.firstProject.userService.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -18,12 +20,18 @@ public class UserAnswerRepositoryImpl implements UserAnswerRepository {
 
 
     @Override
-    public void createUserAnswer(UserAnswer userQuestionAnswer) {
-        String sql="INSERT INTO " + TABLE_NAME_USER_ANSWER +"(user_id, question_id, selected_option_id) VALUES(?, ?, ?)";
-        jdbcTemplate.update(sql,
-                userQuestionAnswer.getUserId(),
-                userQuestionAnswer.getQuestionId(),
-                userQuestionAnswer.getSelectedOptionId());
+    public void createUserAnswer(UserAnswer userAnswer) {
+        String insertSql = "INSERT INTO " + TABLE_NAME_USER_ANSWER + " (user_id, question_id, selected_option_id) VALUES (?, ?, ?)";
+        jdbcTemplate.update(insertSql,
+                userAnswer.getUserId(),
+                userAnswer.getQuestionId(),
+                userAnswer.getSelectedOptionId());
+
+        String selectSql = "SELECT id FROM " + TABLE_NAME_USER_ANSWER + " WHERE user_id = ? AND question_id = ? AND selected_option_id = ?";
+        Long id = jdbcTemplate.queryForObject(selectSql, Long.class,
+                userAnswer.getUserId(),
+                userAnswer.getQuestionId(),
+                userAnswer.getSelectedOptionId());
 
     }
 
@@ -95,4 +103,5 @@ public class UserAnswerRepositoryImpl implements UserAnswerRepository {
         String sql="SELECT * FROM "+ TABLE_NAME_USER_ANSWER +" WHERE user_id=?";
         return jdbcTemplate.query(sql,new UserAnswerMapper(),userId);
     }
+
 }

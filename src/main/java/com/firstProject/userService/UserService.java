@@ -1,20 +1,21 @@
 package com.firstProject.userService;
 
-import org.h2.engine.User;
+import com.firstProject.model.UserAnswer;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(
         name = "UserService",
-        url = "${externalApi.userService.url}"
+        url = "http://localhost:8090"
 )
 public interface UserService {
     @GetMapping(value = "/user/{userId}")
-    User getUserById(@PathVariable Long userId);
+    UserAnswer getUserAnswerById(@PathVariable Long userId);
 
-    @PostMapping(value = "/user")
-    User getUserByEmail(@RequestParam String email);
+    @GetMapping(value = "/user")
+    UserAnswer getUserAnswerByEmail(@RequestParam String email);
+    @GetMapping(value = "/registered")
+    boolean getRegistered();
 }
