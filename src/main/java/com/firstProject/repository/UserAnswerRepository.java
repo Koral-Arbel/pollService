@@ -10,7 +10,7 @@ public interface UserAnswerRepository {
     void updateUserAnswer(UserAnswer userAnswer);
     void deleteUserAnswer(Long id);
     void deleteQuestionAnswerByUserId(Long userId);
-    Boolean checkIfUserAnsweredQuestionByUserIdAndQuestionId(Long userId,Long questionId);
+    boolean checkIfUserAnsweredQuestionByUserIdAndQuestionId(Long userId,Long questionId);
     Integer getUsersAnsweredCountByQuestionId(Long questionId);
     List<OptionSelectedToMapper> getUsersChoseQuestionOptionNumber(Long questionId);
     Integer getNumberOfQuestionsUserAnswered(Long userId);

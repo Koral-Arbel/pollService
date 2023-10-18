@@ -54,9 +54,9 @@ public class PollQuestionServiceImpl implements PollQuestionService {
 
     @Override
     public QuestionOptionResponse getQuestionById(Long id) {
-        List<Option> answers = optionService.getOptionsByQuestionId(id);
+        List<Option> options = optionService.getOptionsByQuestionId(id);
         Question question = questionRepository.getQuestionById(id);
-        return question.toQuestionOptionResponse(question, answers);
+        return question.toQuestionOptionResponse(question, options);
     }
 
     @Override

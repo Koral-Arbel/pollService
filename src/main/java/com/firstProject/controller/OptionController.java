@@ -8,31 +8,32 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/options")
 public class OptionController {
     @Autowired
     private PollOptionService optionService;
 
-    @PostMapping(value = "/option/create")
+    @PostMapping(value = "/create")
     public Option createAnswer(@RequestBody Option option){
         return optionService.createOption(option);
     }
 
-    @PutMapping(value = "/option/{optionId}/update")
+    @PutMapping(value = "/{optionId}/update")
     public Option updateOption(@RequestBody Option option, @PathVariable Long optionId){
         return optionService.updateOption(option);
     }
 
-    @DeleteMapping(value = "/option/{optionId}/delete")
+    @DeleteMapping(value = "{optionId}/delete")
     public void deleteOption(@PathVariable Long optionId){
         optionService.deleteOption(optionId);
     }
 
-    @GetMapping(value = "/option/{optionId}")
+    @GetMapping(value = "{optionId}")
     public Option getOptionById(@PathVariable Long optionId){
         return optionService.getOptionById(optionId);
     }
 
-    @GetMapping(value = "/options/{questionId}")
+    @GetMapping(value = "/{questionId}")
     public List<Option> getOptionsByQuestionId(@PathVariable Long questionId){
         return optionService.getOptionsByQuestionId(questionId);
     }

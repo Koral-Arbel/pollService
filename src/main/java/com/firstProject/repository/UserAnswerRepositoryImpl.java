@@ -1,11 +1,8 @@
 package com.firstProject.repository;
 
-import com.firstProject.model.OptionSelectedToMapper;
-import com.firstProject.model.UserAnswer;
-import com.firstProject.model.UserAnswerResponse;
+import com.firstProject.model.*;
 import com.firstProject.repository.mapper.OptionSelectedMapper;
 import com.firstProject.repository.mapper.UserAnswerMapper;
-import com.firstProject.userService.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -58,7 +55,7 @@ public class UserAnswerRepositoryImpl implements UserAnswerRepository {
     }
 
     @Override
-    public Boolean checkIfUserAnsweredQuestionByUserIdAndQuestionId(Long userId, Long questionId) {
+    public boolean checkIfUserAnsweredQuestionByUserIdAndQuestionId(Long userId, Long questionId) {
         String sql="SELECT * FROM "+ TABLE_NAME_USER_ANSWER +" WHERE user_id=? AND question_id=?";
         try{
             UserAnswer userAnswer =jdbcTemplate.queryForObject(sql,

@@ -1,11 +1,18 @@
 package com.firstProject.model;
 
+import com.firstProject.userService.UserServiceClient;
+
 public class OptionSelectedToMapper {
     private Long answerId;
     private Integer countingAnswers;
 
     public OptionSelectedToMapper(Long answerId, Integer countingAnswers) {
         this.answerId = answerId;
+        this.countingAnswers = countingAnswers;
+    }
+
+    public OptionSelectedToMapper(UserServiceClient answerId, Integer countingAnswers) {
+
         this.countingAnswers = countingAnswers;
     }
 

@@ -2,7 +2,7 @@ package com.firstProject.service;
 
 import com.firstProject.model.*;
 import com.firstProject.repository.UserAnswerRepositoryImpl;
-import com.firstProject.userService.UserService;
+import com.firstProject.userService.UserServiceClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ public class UserAnswerServiceImpl implements UserAnswerService {
     @Autowired
     UserAnswerRepositoryImpl userAnswerRepository;
     @Autowired
-    UserService userService;
+    UserServiceClient userServiceClient;
     @Autowired
     PollQuestionService questionService;
     @Autowired
@@ -23,10 +23,10 @@ public class UserAnswerServiceImpl implements UserAnswerService {
 
     @Override
     public void createUserAnswer(UserAnswerRequest userAnswerRequest) {
-        UserAnswer user = userService.getUserAnswerByEmail(userAnswerRequest.getEmail());
+        User user = userServiceClient.getUserAnswerByEmail(userAnswerRequest.getEmail());
 
         if (user != null && !checkIfUserAnsweredQuestionByUserIdAndQuestionId(user.getUserId(), userAnswerRequest.getQuestionOptionRequest().getQuestion().getId())) {
-            boolean isRegistered = userService.getRegistered(); // נשתמש ישירות בערך במשתנה בוליאני
+            boolean isRegistered = userServiceClient.getRegistered(); // נשתמש ישירות בערך במשתנה בוליאני
 
             if (isRegistered) {
                 userAnswerRepository.createUserAnswer(userAnswerRequest.toUserAnswer(
@@ -40,7 +40,12 @@ public class UserAnswerServiceImpl implements UserAnswerService {
 
     @Override
     public void updateUserAnswer(UserAnswerRequest userAnswerRequest) {
-        UserAnswer user = userService.getUserAnswerByEmail(userAnswerRequest.getEmail());
+        User user = userServiceClient.getUserAnswerByEmail(userAnswerRequest.getEmail());
+        userAnswerRepository.updateUserAnswer(userAnswerRequest.toUserAnswer(
+                user.getUserId(),
+                userAnswerRequest.getOption().getQuestionId(),
+                userAnswerRequest.getOption().getId()
+        ));
     }
 
     @Override
@@ -71,13 +76,13 @@ public class UserAnswerServiceImpl implements UserAnswerService {
     @Override
     public QuestionOptionSelectedResponse getUsersChoseQuestionOptionNumber(Long questionId) {
         List<OptionSelectedToMapper> answerChosenToMaps = userAnswerRepository.getUsersChoseQuestionOptionNumber(questionId);
-        QuestionOptionResponse question = questionService.getQuestionById(questionId);
-        String questionText = question.getQuestion().getTitle();
+        QuestionOptionResponse questions = questionService.getQuestionById(questionId);
+        String questionText = questions.getQuestion().getTitle();
         List<OptionSelected> answers = new ArrayList<>();
-        answers.add(new OptionSelected(question.getOption1().getTextOption(), 0));
-        answers.add(new OptionSelected(question.getOption2().getTextOption(), 0));
-        answers.add(new OptionSelected(question.getOption3().getTextOption(), 0));
-        answers.add(new OptionSelected(question.getOption4().getTextOption(), 0));
+        answers.add(new OptionSelected(questions.getOption1().getTextOption(), 0));
+        answers.add(new OptionSelected(questions.getOption2().getTextOption(), 0));
+        answers.add(new OptionSelected(questions.getOption3().getTextOption(), 0));
+        answers.add(new OptionSelected(questions.getOption4().getTextOption(), 0));
 
         for (int i = 0; i < answerChosenToMaps.size(); i++) {
             Option option = optionService.getOptionById(answerChosenToMaps.get(i).getAnswerId());

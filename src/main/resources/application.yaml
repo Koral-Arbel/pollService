@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
 
 spring:
   datasource:
@@ -16,7 +16,8 @@ spring:
 
 externalApi:
   userService:
-    url: localhost:8090
+    url: localhost:8082
+
 
 redis:
   host: localhost

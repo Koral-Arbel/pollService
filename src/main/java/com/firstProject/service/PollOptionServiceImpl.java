@@ -5,6 +5,7 @@ import com.firstProject.repository.OptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -14,7 +15,9 @@ public class PollOptionServiceImpl implements PollOptionService {
 
     @Override
     public Option createOption(Option option) {
-        return getOptionById(optionRepository.createOption(option));
+        Long optionId = optionRepository.createOption(option);
+        Option createdOption = getOptionById(optionId);
+        return createdOption;
     }
 
     @Override
