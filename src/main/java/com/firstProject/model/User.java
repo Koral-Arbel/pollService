@@ -1,37 +1,33 @@
 package com.firstProject.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 @Component
 public class User {
-    private Long userId;
+    private Long id;
     private String firstName;
     private String lastName;
     private String email;
-    private Integer age;
+    private int age;
     private String address;
+    private LocalDateTime joiningDate;
     private boolean registered;
-    private LocalDateTime joinDate;
 
-    public User() {
-    }
-
-    public User(Long userId, String firstName, String lastName, String email, Integer age, String address, boolean registered, LocalDateTime joinDate) {
-        this.userId = userId;
+    public User() {}
+    public User(String firstName, String lastName, String email, int age, String address, LocalDateTime joiningDate, boolean registered) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.age = age;
         this.address = address;
+        this.joiningDate = joiningDate;
         this.registered = registered;
-        this.joinDate = joinDate;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
     public String getFirstName() {
@@ -46,7 +42,7 @@ public class User {
         return email;
     }
 
-    public Integer getAge() {
+    public int getAge() {
         return age;
     }
 
@@ -54,16 +50,16 @@ public class User {
         return address;
     }
 
+    public LocalDateTime getJoiningDate() {
+        return joiningDate;
+    }
+
     public boolean isRegistered() {
         return registered;
     }
 
-    public LocalDateTime getJoinDate() {
-        return joinDate;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setFirstName(String firstName) {
@@ -78,7 +74,7 @@ public class User {
         this.email = email;
     }
 
-    public void setAge(Integer age) {
+    public void setAge(int age) {
         this.age = age;
     }
 
@@ -86,11 +82,13 @@ public class User {
         this.address = address;
     }
 
+    public void setJoiningDate(LocalDateTime joiningDate) {
+        this.joiningDate = joiningDate;
+    }
+
     public void setRegistered(boolean registered) {
         this.registered = registered;
     }
 
-    public void setJoinDate(LocalDateTime joinDate) {
-        this.joinDate = joinDate;
-    }
+
 }

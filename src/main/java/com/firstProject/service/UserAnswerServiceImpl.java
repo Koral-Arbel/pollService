@@ -23,14 +23,14 @@ public class UserAnswerServiceImpl implements UserAnswerService {
 
     @Override
     public void createUserAnswer(UserAnswerRequest userAnswerRequest) {
-        User user = userServiceClient.getUserAnswerByEmail(userAnswerRequest.getEmail());
+        User user = userServiceClient.getUserEmail(userAnswerRequest.getEmail());
 
-        if (user != null && !checkIfUserAnsweredQuestionByUserIdAndQuestionId(user.getUserId(), userAnswerRequest.getQuestionOptionRequest().getQuestion().getId())) {
-            boolean isRegistered = userServiceClient.getRegistered(); // נשתמש ישירות בערך במשתנה בוליאני
+        if (user != null && !checkIfUserAnsweredQuestionByUserIdAndQuestionId(user.getId(), userAnswerRequest.getQuestionOptionRequest().getQuestion().getId())) {
+            boolean isRegistered = userServiceClient.getUserEmail(userAnswerRequest.getEmail()).isRegistered(); // נשתמש ישירות בערך במשתנה בוליאני
 
             if (isRegistered) {
                 userAnswerRepository.createUserAnswer(userAnswerRequest.toUserAnswer(
-                        user.getUserId(),
+                        userServiceClient.getUserById(user.getId()).getId(),
                         userAnswerRequest.getQuestionOptionRequest().getQuestion().getId(),
                         userAnswerRequest.getOption().getId()
                 ));
@@ -40,9 +40,9 @@ public class UserAnswerServiceImpl implements UserAnswerService {
 
     @Override
     public void updateUserAnswer(UserAnswerRequest userAnswerRequest) {
-        User user = userServiceClient.getUserAnswerByEmail(userAnswerRequest.getEmail());
+        User user = userServiceClient.getUserEmail(userAnswerRequest.getEmail());
         userAnswerRepository.updateUserAnswer(userAnswerRequest.toUserAnswer(
-                user.getUserId(),
+                user.getId(),
                 userAnswerRequest.getOption().getQuestionId(),
                 userAnswerRequest.getOption().getId()
         ));
@@ -51,21 +51,16 @@ public class UserAnswerServiceImpl implements UserAnswerService {
     @Override
     public void deleteUserAnswer(Long id) {
         userAnswerRepository.deleteUserAnswer(id);
-
-
     }
 
     @Override
     public void deleteQuestionAnswerByUserId(Long userId) {
         userAnswerRepository.deleteQuestionAnswerByUserId(userId);
-
-
     }
 
     @Override
     public Boolean checkIfUserAnsweredQuestionByUserIdAndQuestionId(Long userId, Long questionId) {
         return userAnswerRepository.checkIfUserAnsweredQuestionByUserIdAndQuestionId(userId, questionId);
-
     }
 
     @Override

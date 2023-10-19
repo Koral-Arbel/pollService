@@ -20,6 +20,7 @@ dependencies {
 	implementation 'redis.clients:jedis:4.0.1'
 
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:3.0.5'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'com.h2database:h2:1.4.193'

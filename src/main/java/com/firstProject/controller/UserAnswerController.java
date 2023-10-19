@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(value = "/userAnswer")
+@RequestMapping(value = "userAnswer")
 public class UserAnswerController {
 
 
@@ -25,10 +25,10 @@ public class UserAnswerController {
     UserAnswerRepository userAnswerRepository;
 
     @PostMapping(value = "/create")
-    public ResponseEntity<String> createUserQuestionAnswer(@RequestParam UserAnswerRequest userAnswerRequest) {
+    public ResponseEntity<String> createUserAnswer(@RequestBody UserAnswerRequest userAnswerRequest) {
         try {
             // ביצוע קריאה לשירות כדי לבדוק אם המשתמש רשום
-            UserServiceClient user = (UserServiceClient) userServiceClient.getUserAnswerByEmail(userAnswerRequest.getEmail());
+            UserServiceClient user = (UserServiceClient) userServiceClient.getUserEmail(userAnswerRequest.getEmail());
             userAnswerService.createUserAnswer(userAnswerRequest);
 
 
@@ -40,7 +40,7 @@ public class UserAnswerController {
             }
 
             // ביצוע קריאה נוספת לשירות כדי לבדוק האם המשתמש רשום
-            boolean isRegistered = userServiceClient.getRegistered();
+            boolean isRegistered = userServiceClient.getUserEmail(userAnswerRequest.getEmail()).isRegistered();
 
             if (isRegistered) {
                 // שמירת התשובה במאגר הנתונים
@@ -69,10 +69,10 @@ public class UserAnswerController {
         userAnswerService.deleteUserAnswer(userAnswerId);
     }
 
-    @DeleteMapping(value = "/deleteAnswers/{userId}")
-    public void deleteUserAnswersByUserId(@PathVariable Long userId) {
-        userAnswerService.deleteQuestionAnswerByUserId(userId);
-    }
+//    @DeleteMapping(value = "/deleteAnswers/{userId}")
+//    public void deleteUserAnswersByUserId(@PathVariable Long userId) {
+//        userAnswerService.deleteQuestionAnswerByUserId(userId);
+//    }
 
     @GetMapping(value = "/getUsersAnsweredNumber/{questionId}")
     public String getNumberOfUsersAnsweredQuestionByQuestionId(@PathVariable Long questionId) {
