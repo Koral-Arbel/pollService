@@ -4,6 +4,7 @@ import com.firstProject.model.*;
 import com.firstProject.repository.UserAnswerRepositoryImpl;
 import com.firstProject.userService.UserServiceClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,14 +24,14 @@ public class UserAnswerServiceImpl implements UserAnswerService {
 
     @Override
     public void createUserAnswer(UserAnswerRequest userAnswerRequest) {
-        User user = userServiceClient.getUserEmail(userAnswerRequest.getEmail());
+        User user = userServiceClient.getUserByEmail(userAnswerRequest.getEmail()).getBody();
 
-        if (user != null && !checkIfUserAnsweredQuestionByUserIdAndQuestionId(user.getId(), userAnswerRequest.getQuestionOptionRequest().getQuestion().getId())) {
-            boolean isRegistered = userServiceClient.getUserEmail(userAnswerRequest.getEmail()).isRegistered(); // נשתמש ישירות בערך במשתנה בוליאני
+        if(!checkIfUserAnsweredQuestionByUserIdAndQuestionId(user.getId(),userAnswerRequest.getQuestionOptionRequest().getQuestion().getId())) {
+            boolean isRegistered = userServiceClient.getUserByEmail(userAnswerRequest.getEmail()).hasBody(); // נשתמש ישירות בערך במשתנה בוליאני
 
             if (isRegistered) {
                 userAnswerRepository.createUserAnswer(userAnswerRequest.toUserAnswer(
-                        userServiceClient.getUserById(user.getId()).getId(),
+                        user.getId(),
                         userAnswerRequest.getQuestionOptionRequest().getQuestion().getId(),
                         userAnswerRequest.getOption().getId()
                 ));
@@ -40,7 +41,7 @@ public class UserAnswerServiceImpl implements UserAnswerService {
 
     @Override
     public void updateUserAnswer(UserAnswerRequest userAnswerRequest) {
-        User user = userServiceClient.getUserEmail(userAnswerRequest.getEmail());
+        User user = userServiceClient.getUserByEmail(userAnswerRequest.getEmail()).getBody();
         userAnswerRepository.updateUserAnswer(userAnswerRequest.toUserAnswer(
                 user.getId(),
                 userAnswerRequest.getOption().getQuestionId(),
@@ -59,6 +60,11 @@ public class UserAnswerServiceImpl implements UserAnswerService {
     }
 
     @Override
+    public ResponseEntity<User> getUserByEmail(String email) {
+        return userAnswerRepository.getUserByEmail(email);
+    }
+
+    @Override
     public Boolean checkIfUserAnsweredQuestionByUserIdAndQuestionId(Long userId, Long questionId) {
         return userAnswerRepository.checkIfUserAnsweredQuestionByUserIdAndQuestionId(userId, questionId);
     }
@@ -69,25 +75,25 @@ public class UserAnswerServiceImpl implements UserAnswerService {
     }
 
     @Override
-    public QuestionOptionSelectedResponse getUsersChoseQuestionOptionNumber(Long questionId) {
-        List<OptionSelectedToMapper> answerChosenToMaps = userAnswerRepository.getUsersChoseQuestionOptionNumber(questionId);
+    public SelectedQuestionOptionResponse getUsersChoseQuestionOptionNumber(Long questionId) {
+        List<SelectedOptionToMapper> answerChosenToMaps = userAnswerRepository.getUsersChoseQuestionOptionNumber(questionId);
         QuestionOptionResponse questions = questionService.getQuestionById(questionId);
         String questionText = questions.getQuestion().getTitle();
-        List<OptionSelected> answers = new ArrayList<>();
-        answers.add(new OptionSelected(questions.getOption1().getTextOption(), 0));
-        answers.add(new OptionSelected(questions.getOption2().getTextOption(), 0));
-        answers.add(new OptionSelected(questions.getOption3().getTextOption(), 0));
-        answers.add(new OptionSelected(questions.getOption4().getTextOption(), 0));
+        List<SelectedOption> answers = new ArrayList<>();
+        answers.add(new SelectedOption(questions.getOption1().getTextOption(), 0));
+        answers.add(new SelectedOption(questions.getOption2().getTextOption(), 0));
+        answers.add(new SelectedOption(questions.getOption3().getTextOption(), 0));
+        answers.add(new SelectedOption(questions.getOption4().getTextOption(), 0));
 
         for (int i = 0; i < answerChosenToMaps.size(); i++) {
-            Option option = optionService.getOptionById(answerChosenToMaps.get(i).getAnswerId());
+            Option option = optionService.getOptionById(answerChosenToMaps.get(i).getOptionId());
             for (int x = 0; x < answers.size(); x++) {
                 if (answers.get(x).getTextOption() == option.getTextOption()) {
-                    answers.get(x).setSelectedAnswer(answerChosenToMaps.get(i).getCountingAnswers());
+                    answers.get(x).setSelectedAnswer(answerChosenToMaps.get(i).getAmountAnswersAnswered());
                 }
             }
         }
-        return new QuestionOptionSelectedResponse(questionText, answers);
+        return new SelectedQuestionOptionResponse(questionText, answers);
     }
 
     @Override
@@ -96,13 +102,13 @@ public class UserAnswerServiceImpl implements UserAnswerService {
     }
 
     @Override
-    public List<QuestionOptionSelectedResponse> getAllQuestionsAndAnswerSelectedCount() {
+    public List<SelectedQuestionOptionResponse> getAllQuestionsAndAnswerSelectedCount() {
         List<QuestionOptionResponse> questions=questionService.getQuestionsList();
-        List<QuestionOptionSelectedResponse> questionsResponse=new ArrayList<>();
+        List<SelectedQuestionOptionResponse> questionsResponse=new ArrayList<>();
 
         for (var question:questions) {
             try {
-                QuestionOptionSelectedResponse response= getUsersChoseQuestionOptionNumber(question.getQuestion().getId());
+                SelectedQuestionOptionResponse response= getUsersChoseQuestionOptionNumber(question.getQuestion().getId());
                 questionsResponse.add(response);
             }catch (Exception err){
 
@@ -123,4 +129,6 @@ public class UserAnswerServiceImpl implements UserAnswerService {
         }
         return responseList;
     }
+
+
 }

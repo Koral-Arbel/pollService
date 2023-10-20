@@ -4,6 +4,7 @@ import com.firstProject.model.*;
 import com.firstProject.repository.mapper.OptionSelectedMapper;
 import com.firstProject.repository.mapper.UserAnswerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -18,23 +19,18 @@ public class UserAnswerRepositoryImpl implements UserAnswerRepository {
 
     @Override
     public void createUserAnswer(UserAnswer userAnswer) {
-        String insertSql = "INSERT INTO " + TABLE_NAME_USER_ANSWER + " (user_id, question_id, selected_option_id) VALUES (?, ?, ?)";
-        jdbcTemplate.update(insertSql,
+        String sql = "INSERT INTO " + TABLE_NAME_USER_ANSWER + " " + "(user_id, question_id, selected_option_id) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql,
                 userAnswer.getUserId(),
                 userAnswer.getQuestionId(),
                 userAnswer.getSelectedOptionId());
-
-        String selectSql = "SELECT id FROM " + TABLE_NAME_USER_ANSWER + " WHERE user_id = ? AND question_id = ? AND selected_option_id = ?";
-        Long id = jdbcTemplate.queryForObject(selectSql, Long.class,
-                userAnswer.getUserId(),
-                userAnswer.getQuestionId(),
-                userAnswer.getSelectedOptionId());
+        jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
 
     }
 
     @Override
     public void updateUserAnswer(UserAnswer userAnswer) {
-        String sql="UPDATE "+ TABLE_NAME_USER_ANSWER +" SET selected_option_id = ? WHERE id=?";
+        String sql="UPDATE "+ TABLE_NAME_USER_ANSWER +" SET selected_option_id=? WHERE id=?";
         jdbcTemplate.update(sql,
                 userAnswer.getSelectedOptionId(),
                 userAnswer.getId());
@@ -52,6 +48,11 @@ public class UserAnswerRepositoryImpl implements UserAnswerRepository {
         String sql="DELETE FROM "+ TABLE_NAME_USER_ANSWER +" WHERE user_id=?";
         jdbcTemplate.update(sql, userId);
 
+    }
+
+    @Override
+    public ResponseEntity<User> getUserByEmail(String email) {
+        return null;
     }
 
     @Override
@@ -78,7 +79,7 @@ public class UserAnswerRepositoryImpl implements UserAnswerRepository {
     }
 
     @Override
-    public List<OptionSelectedToMapper> getUsersChoseQuestionOptionNumber(Long questionId) {
+    public List<SelectedOptionToMapper> getUsersChoseQuestionOptionNumber(Long questionId) {
         String sql="SELECT question_id, selected_option_id, COUNT(selected_option_id) AS times_answered From "+ TABLE_NAME_USER_ANSWER + " Where question_id=? GROUP BY selected_option_id";
         return jdbcTemplate.query(sql,new OptionSelectedMapper(),questionId);
     }
@@ -90,7 +91,7 @@ public class UserAnswerRepositoryImpl implements UserAnswerRepository {
     }
 
     @Override
-    public List<OptionSelectedToMapper> getAllQuestionsAndAnswerSelectedCount(Long questionId) {
+    public List<SelectedOptionToMapper> getAllQuestionsAndAnswerSelectedCount(Long questionId) {
         String sql="SELECT  selected_option_id, COUNT(selected_option_id) AS times_answered FROM "+ TABLE_NAME_USER_ANSWER +" WHERE question_id=? GROUP BY selected_option_id";
         return jdbcTemplate.query(sql,new OptionSelectedMapper(),questionId);
     }

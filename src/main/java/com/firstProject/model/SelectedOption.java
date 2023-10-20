@@ -1,10 +1,10 @@
 package com.firstProject.model;
 
-public class OptionSelected {
+public class SelectedOption {
     private String textOption;
     private Integer selectedAnswer;
 
-    public OptionSelected(String textOption, Integer selectedAnswer) {
+    public SelectedOption(String textOption, Integer selectedAnswer) {
         this.textOption = textOption;
         this.selectedAnswer = selectedAnswer;
     }

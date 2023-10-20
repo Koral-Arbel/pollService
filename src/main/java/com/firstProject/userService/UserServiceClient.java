@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface UserServiceClient {
 
     @GetMapping(value = "user/{userId}")
-    User getUserById(@PathVariable Long userId);
-    @GetMapping(value = "user")
-    User getUserEmail(@RequestParam String email);
+    ResponseEntity<User> getUserById(@PathVariable Long userId);
 
+    @GetMapping(value = "user")
+    ResponseEntity<User> getUserByEmail(@RequestParam String email);
 
 }

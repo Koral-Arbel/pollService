@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/questions")
+@RequestMapping("/question")
 public class QuestionController {
     @Autowired
     PollQuestionService questionService;
@@ -20,22 +20,22 @@ public class QuestionController {
         return questionService.createQuestion(questionOptionRequest);
     }
 
-    @PutMapping(value = "/question/{questionId}/update")
+    @PutMapping(value = "/{questionId}/update")
     public Question questionUpdate(@PathVariable Long questionId, @RequestBody Question question){
         return questionService.updateQuestion(question);
     }
 
-    @DeleteMapping(value = "/question/{questionId}/delete")
+    @DeleteMapping(value = "/{questionId}/delete")
     public void questionDelete(@PathVariable Long questionId){
         questionService.deleteQuestion(questionId);
     }
 
-    @GetMapping(value = "/question/{questionId}")
+    @GetMapping(value = "/{questionId}")
     public QuestionOptionResponse getQuestionById(@PathVariable Long questionId){
         return questionService.getQuestionById(questionId);
     }
 
-    @GetMapping(value = "/questions")
+    @GetMapping(value = "/all")
     public List<QuestionOptionResponse> getAllQuestions(){
         return questionService.getQuestionsList();
     }

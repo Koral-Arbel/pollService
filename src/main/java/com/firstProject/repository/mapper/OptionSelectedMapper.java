@@ -1,19 +1,19 @@
 package com.firstProject.repository.mapper;
 
-import com.firstProject.model.OptionSelectedToMapper;
+import com.firstProject.model.SelectedOptionToMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 @Component
-public class OptionSelectedMapper implements RowMapper<OptionSelectedToMapper> {
+public class OptionSelectedMapper implements RowMapper<SelectedOptionToMapper> {
     @Override
-    public OptionSelectedToMapper mapRow(ResultSet rs, int rowNum) throws SQLException {
-        OptionSelectedToMapper optionSelectedToMapper = new OptionSelectedToMapper(
+    public SelectedOptionToMapper mapRow(ResultSet rs, int rowNum) throws SQLException {
+        SelectedOptionToMapper selectedOptionToMapper = new SelectedOptionToMapper(
                 rs.getLong("selected_option_id"),
-                rs.getInt("times_answered")
+                rs.getInt("amount_answers_answered")
         );
-        return optionSelectedToMapper;
+        return selectedOptionToMapper;
     }
 }

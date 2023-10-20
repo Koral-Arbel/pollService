@@ -23,41 +23,30 @@ public class UserAnswerController {
     UserServiceClient userServiceClient;
     @Autowired
     UserAnswerRepository userAnswerRepository;
-
     @PostMapping(value = "/create")
     public ResponseEntity<String> createUserAnswer(@RequestBody UserAnswerRequest userAnswerRequest) {
         try {
             // ביצוע קריאה לשירות כדי לבדוק אם המשתמש רשום
-            UserServiceClient user = (UserServiceClient) userServiceClient.getUserEmail(userAnswerRequest.getEmail());
-            userAnswerService.createUserAnswer(userAnswerRequest);
-
+            User user = userServiceClient.getUserByEmail(userAnswerRequest.getEmail()).getBody();
 
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("המשתמש לא רשום במערכת.");
             }
+
             if (userAnswerService.checkIfUserAnsweredQuestionByUserIdAndQuestionId(userAnswerRequest.getId(), userAnswerRequest.getQuestionOptionRequest().getQuestion().getId())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("המשתמש כבר ענה על שאלה זו.");
             }
+                // המשתמש רשום, אפשר להמשיך לשלב הבא
 
-            // ביצוע קריאה נוספת לשירות כדי לבדוק האם המשתמש רשום
-            boolean isRegistered = userServiceClient.getUserEmail(userAnswerRequest.getEmail()).isRegistered();
-
-            if (isRegistered) {
-                // שמירת התשובה במאגר הנתונים
-                userAnswerRepository.createUserAnswer(userAnswerRequest.toUserAnswer(
-                        userAnswerRequest.getId(),
-                        userAnswerRequest.getQuestionOptionRequest().getQuestion().getId(),
-                        userAnswerRequest.getOption().getId()
-                ));
+                // כאן אפשר לשמור את התשובה במאגר הנתונים או לבצע פעולות נוספות שנדרשות
 
                 return ResponseEntity.status(HttpStatus.OK).body("התשובה נשמרה בהצלחה.");
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("המשתמש לא רשום במערכת.");
-            }
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("שגיאת שרת: " + e.getMessage());
         }
     }
+
 
     @PutMapping(value = "/update/{userAnswerId}")
     public void updateUserQuestionAnswer(@PathVariable Long userAnswerId, @RequestBody UserAnswerRequest userAnswerRequest) {
@@ -74,13 +63,20 @@ public class UserAnswerController {
 //        userAnswerService.deleteQuestionAnswerByUserId(userId);
 //    }
 
-    @GetMapping(value = "/getUsersAnsweredNumber/{questionId}")
+    @GetMapping(value = "user")
+    public ResponseEntity<User> getUserByEmail(@RequestParam String email) {
+        return userAnswerService.getUserByEmail(email);
+
+    }
+
+
+        @GetMapping(value = "/getUsersAnsweredNumber/{questionId}")
     public String getNumberOfUsersAnsweredQuestionByQuestionId(@PathVariable Long questionId) {
         return userAnswerService.getUsersAnsweredCountByQuestionId(questionId) + " users have answered this question number " + questionId;
     }
 
     @GetMapping(value = "/answerUserCount/{questionId}")
-    public QuestionOptionSelectedResponse getUsersChoseAnswerByQuestionId(@PathVariable Long questionId) {
+    public SelectedQuestionOptionResponse getUsersChoseAnswerByQuestionId(@PathVariable Long questionId) {
         return userAnswerService.getUsersChoseQuestionOptionNumber(questionId);
     }
 
@@ -90,7 +86,7 @@ public class UserAnswerController {
     }
 
     @GetMapping(value = "/allQuestionsAnswersCounter")
-    public List<QuestionOptionSelectedResponse> getAllQuestionsAndAnswerSelectedCount() {
+    public List<SelectedQuestionOptionResponse> getAllQuestionsAndAnswerSelectedCount() {
         return userAnswerService.getAllQuestionsAndAnswerSelectedCount();
     }
 
@@ -98,4 +94,5 @@ public class UserAnswerController {
     public List<UserAnswerResponse> getAllUserAnswers(@PathVariable Long userId) {
         return userAnswerService.getAllUserAnswers(userId);
     }
+
 }

@@ -2,11 +2,11 @@ package com.firstProject.model;
 
 import java.util.List;
 
-public class QuestionOptionSelectedResponse {
+public class SelectedQuestionOptionResponse {
     private String titleQuestion;
-    List<OptionSelected> selectOption;
+    List<SelectedOption> selectOption;
 
-    public QuestionOptionSelectedResponse(String titleQuestion, List<OptionSelected> selectOption) {
+    public SelectedQuestionOptionResponse(String titleQuestion, List<SelectedOption> selectOption) {
         this.titleQuestion = titleQuestion;
         this.selectOption = selectOption;
     }
@@ -15,7 +15,7 @@ public class QuestionOptionSelectedResponse {
         return titleQuestion;
     }
 
-    public List<OptionSelected> getSelectOption() {
+    public List<SelectedOption> getSelectOption() {
         return selectOption;
     }
 
@@ -23,7 +23,7 @@ public class QuestionOptionSelectedResponse {
         this.titleQuestion = titleQuestion;
     }
 
-    public void setSelectOption(List<OptionSelected> selectOption) {
+    public void setSelectOption(List<SelectedOption> selectOption) {
         this.selectOption = selectOption;
     }
 }
