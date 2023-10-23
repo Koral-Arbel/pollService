@@ -51,29 +51,13 @@ public class UserAnswerServiceImpl implements UserAnswerService {
 
     @Override
     public void deleteUserAnswer(Long id) {
-        userAnswerRepository.deleteUserAnswer(id);
+        userAnswerRepository.deleteUserAnswerById(id);
     }
 
     @Override
     public void deleteQuestionAnswerByUserId(Long userId) {
-        userAnswerRepository.deleteQuestionAnswerByUserId(userId);
+        userAnswerRepository.deleteUserAnswerById(userId);
     }
-
-    @Override
-    public ResponseEntity<User> getUserByEmail(String email) {
-        return userAnswerRepository.getUserByEmail(email);
-    }
-
-    @Override
-    public Boolean checkIfUserAnsweredQuestionByUserIdAndQuestionId(Long userId, Long questionId) {
-        return userAnswerRepository.checkIfUserAnsweredQuestionByUserIdAndQuestionId(userId, questionId);
-    }
-
-    @Override
-    public Integer getUsersAnsweredCountByQuestionId(Long questionId) {
-        return userAnswerRepository.getUsersAnsweredCountByQuestionId(questionId);
-    }
-
     @Override
     public SelectedQuestionOptionResponse getUsersChoseQuestionOptionNumber(Long questionId) {
         List<SelectedOptionToMapper> answerChosenToMaps = userAnswerRepository.getUsersChoseQuestionOptionNumber(questionId);
@@ -97,6 +81,35 @@ public class UserAnswerServiceImpl implements UserAnswerService {
     }
 
     @Override
+    public Integer getUsersAnsweredCountByQuestionId(Long questionId) {
+        return userAnswerRepository.getUsersAnsweredCountByQuestionId(questionId);
+    }
+
+
+    @Override
+    public ResponseEntity<User> getUserByEmail(String email) {
+        return userAnswerRepository.getUserByEmail(email);
+    }
+
+    @Override
+    public Boolean checkIfUserAnsweredQuestionByUserIdAndQuestionId(Long userId, Long questionId) {
+        return userAnswerRepository.checkIfUserAnsweredQuestionByUserIdAndQuestionId(userId, questionId);
+    }
+
+    @Override
+    public List<UserAnswerResponse> getAllUserAnswers(Long userId) {
+        List<UserAnswerResponse> responseList=new ArrayList<>();
+        List<UserAnswer> list=userAnswerRepository.getAllUserAnswers(userId);
+
+        for(var questionAnswer:list){
+            String question=questionService.getQuestionById(questionAnswer.getQuestionId()).getQuestion().getTitle();
+            String answer= optionService.getOptionById(questionAnswer.getQuestionId()).getTextOption();
+            responseList.add(new UserAnswerResponse());
+        }
+        return responseList;
+    }
+
+    @Override
     public Integer getNumberOfQuestionsUserAnswered(Long userId) {
         return userAnswerRepository.getNumberOfQuestionsUserAnswered(userId);
     }
@@ -116,19 +129,4 @@ public class UserAnswerServiceImpl implements UserAnswerService {
         }
         return questionsResponse;
     }
-
-    @Override
-    public List<UserAnswerResponse> getAllUserAnswers(Long userId) {
-        List<UserAnswerResponse> responseList=new ArrayList<>();
-        List<UserAnswer> list=userAnswerRepository.getAllUserAnswers(userId);
-
-        for(var questionAnswer:list){
-            String question=questionService.getQuestionById(questionAnswer.getQuestionId()).getQuestion().getTitle();
-            String answer= optionService.getOptionById(questionAnswer.getQuestionId()).getTextOption();
-            responseList.add(new UserAnswerResponse());
-        }
-        return responseList;
-    }
-
-
 }

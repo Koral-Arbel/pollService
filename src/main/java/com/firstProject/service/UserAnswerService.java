@@ -10,13 +10,15 @@ public interface UserAnswerService {
         void updateUserAnswer(UserAnswerRequest userAnswerRequest);
         void deleteUserAnswer(Long id);
         void deleteQuestionAnswerByUserId(Long userId);
-        Boolean checkIfUserAnsweredQuestionByUserIdAndQuestionId(Long userId,Long questionId);
-        Integer getUsersAnsweredCountByQuestionId(Long questionId);
+
         SelectedQuestionOptionResponse getUsersChoseQuestionOptionNumber(Long questionId);
+        Integer getUsersAnsweredCountByQuestionId(Long questionId);
+        List<UserAnswerResponse> getAllUserAnswers(Long userId);
         Integer getNumberOfQuestionsUserAnswered(Long userId);
         List<SelectedQuestionOptionResponse> getAllQuestionsAndAnswerSelectedCount();
-        List<UserAnswerResponse> getAllUserAnswers(Long userId);
 
 
+
+        Boolean checkIfUserAnsweredQuestionByUserIdAndQuestionId(Long userId,Long questionId);
         ResponseEntity<User> getUserByEmail(String email);
 }

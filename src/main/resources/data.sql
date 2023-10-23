@@ -22,7 +22,6 @@ CREATE TABLE user_answers (
    question_id INT UNSIGNED NOT NULL,
    selected_option_id INT UNSIGNED NOT NULL,
    PRIMARY KEY (id),
-   UNIQUE KEY unique_user_question (user_id, question_id),
    FOREIGN KEY (question_id) REFERENCES poll_question (id),
    FOREIGN KEY (selected_option_id) REFERENCES poll_options (id)
 );
