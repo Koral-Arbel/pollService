@@ -11,5 +11,5 @@ public interface PollQuestionService {
     Question updateQuestion (Question question);
     void deleteQuestion (Long id);
     QuestionOptionResponse getQuestionById(Long id);
-    List<QuestionOptionResponse> getQuestionsList();
+    List<QuestionOptionResponse> getAllPoll();
 }

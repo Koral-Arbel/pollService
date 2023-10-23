@@ -116,7 +116,7 @@ public class UserAnswerServiceImpl implements UserAnswerService {
 
     @Override
     public List<SelectedQuestionOptionResponse> getAllQuestionsAndAnswerSelectedCount() {
-        List<QuestionOptionResponse> questions=questionService.getQuestionsList();
+        List<QuestionOptionResponse> questions=questionService.getAllPoll();
         List<SelectedQuestionOptionResponse> questionsResponse=new ArrayList<>();
 
         for (var question:questions) {

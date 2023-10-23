@@ -19,7 +19,7 @@ public class QuestionRepositoryImpl implements QuestionRepository {
 
     @Override
     public Long createQuestion(Question question) {
-        String sql="INSERT INTO " + TABLE_NAME_QUESTION + "(title) VALUES(?)";
+        String sql = "INSERT INTO " + TABLE_NAME_QUESTION + "(title) VALUES(?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[] { "ID" });
@@ -54,7 +54,7 @@ public class QuestionRepositoryImpl implements QuestionRepository {
     }
 
     @Override
-    public List<Question> getQuestionsList() {
+    public List<Question> getAllPoll() {
         String sql="SELECT * FROM "+ TABLE_NAME_QUESTION;
         try {
             return jdbcTemplate.query(sql,new QuestionMapper());

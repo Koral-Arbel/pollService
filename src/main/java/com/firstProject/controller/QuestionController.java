@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/question")
+@RequestMapping("question")
 public class QuestionController {
     @Autowired
     PollQuestionService questionService;
@@ -36,7 +36,7 @@ public class QuestionController {
     }
 
     @GetMapping(value = "/all")
-    public List<QuestionOptionResponse> getAllQuestions(){
-        return questionService.getQuestionsList();
+    public List<QuestionOptionResponse> getAllPoll(){
+        return questionService.getAllPoll();
     }
 }

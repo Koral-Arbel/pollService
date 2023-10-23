@@ -10,5 +10,5 @@ public interface QuestionRepository {
     void deleteQuestion(Long id);
 
     Question getQuestionById(Long id);
-    List<Question> getQuestionsList();
+    List<Question> getAllPoll();
 }

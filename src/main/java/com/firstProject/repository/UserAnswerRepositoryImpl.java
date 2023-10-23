@@ -25,17 +25,12 @@ public class UserAnswerRepositoryImpl implements UserAnswerRepository {
     public Long createUserAnswer(UserAnswer userAnswer) {
         String sql = "INSERT INTO " + TABLE_NAME_USER_ANSWER + " " + "(user_id, question_id, selected_option_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(
-                connection -> {
-                    PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                    ps.setLong(1, userAnswer.getUserId());
-                    ps.setLong(2, userAnswer.getQuestionId());
-                    ps.setLong(3, userAnswer.getSelectedOptionId());
-                    return ps;
-                },
-                keyHolder
-        );
-        return (Long) keyHolder.getKey();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{" ID"});
+            ((PreparedStatement) ps).setLong(1, userAnswer.getUserId());
+            return ps;
+            }, keyHolder);
+        return keyHolder.getKey().longValue();
     }
     @Override
     public void updateUserAnswer(UserAnswer userAnswer) {
