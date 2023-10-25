@@ -3,6 +3,7 @@ package com.firstProject.repository;
 import com.firstProject.model.*;
 import com.firstProject.repository.mapper.OptionSelectedMapper;
 import com.firstProject.repository.mapper.UserAnswerMapper;
+import com.firstProject.repository.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -76,8 +77,15 @@ public class UserAnswerRepositoryImpl implements UserAnswerRepository {
     }
 
     @Override
-    public User getUserById(Long userId) {
-        return getUserById(userId);
+    public Boolean hasUserAnsweredQuestion(Long userId, Long questionId) {
+        String sql = "SELECT COUNT(*) FROM " + TABLE_NAME_USER_ANSWER + " WHERE user_id=? AND question_id=?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, userId, questionId);
+        return count > 0;
     }
 
+    @Override
+    public User getUserById(Long userId) {
+        String sql = "SELECT * FROM " + TABLE_NAME_USER_ANSWER + " WHERE id=?";
+        return jdbcTemplate.queryForObject(sql, new UserMapper(), userId);
+    }
 }

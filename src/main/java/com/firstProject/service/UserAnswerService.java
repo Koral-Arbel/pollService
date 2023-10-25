@@ -16,5 +16,7 @@ public interface UserAnswerService {
         List<UserAnswerResponse> getAllUserAnswers(Long userId);
         Integer getNumberOfQuestionsUserAnswered(Long userId);
         List<SelectedQuestionOptionResponse> getAllQuestionsAndAnswerSelectedCount();
+        Boolean hasUserAnsweredQuestion(Long userId, Long questionId);
         User getUserById(Long userId);
+        ResponseEntity<Boolean> isRegistered(Long userId);
 }

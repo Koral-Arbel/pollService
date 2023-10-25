@@ -13,10 +13,12 @@ public class User {
     private int age;
     private String address;
     private LocalDateTime joiningDate;
-    private boolean registered;
+    private Boolean registered;
 
     public User() {}
-    public User(String firstName, String lastName, String email, int age, String address, LocalDateTime joiningDate, boolean registered) {
+
+    public User(Long id, String firstName, String lastName, String email, int age, String address, LocalDateTime joiningDate, Boolean registered) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -54,7 +56,7 @@ public class User {
         return joiningDate;
     }
 
-    public boolean isRegistered() {
+    public Boolean isRegistered() {
         return registered;
     }
 
@@ -86,7 +88,7 @@ public class User {
         this.joiningDate = joiningDate;
     }
 
-    public void setRegistered(boolean registered) {
+    public void setRegistered(Boolean registered) {
         this.registered = registered;
     }
 

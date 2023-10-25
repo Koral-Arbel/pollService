@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface UserServiceClient {
     @GetMapping(value = "/user/getUserById/{userId}")
     ResponseEntity<User> getUserById(@PathVariable Long userId);
-    @GetMapping(value = "/user/getUserByEmail/{email}")
-    User getUserByEmail(@PathVariable String email);
+    @GetMapping("/user/isRegistered/{userId}")
+    ResponseEntity<Boolean> isRegistered(@PathVariable Long userId);
 
 }

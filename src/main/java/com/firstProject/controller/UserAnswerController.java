@@ -67,8 +67,9 @@ public class UserAnswerController {
         return userServiceClient.getUserById(userId);
     }
 
-    @GetMapping("/getUserByEmail/{email}")
-    public User getUserByEmail(@PathVariable String email) {
-        return userServiceClient.getUserByEmail(email);
+    @GetMapping("/isRegistered/{userId}")
+    public ResponseEntity<Boolean> isRegistered(@PathVariable Long userId) {
+        ResponseEntity<Boolean> isUserRegisteredResponse = userAnswerService.isRegistered(userId);
+        return ResponseEntity.ok(isUserRegisteredResponse.getBody());
     }
 }

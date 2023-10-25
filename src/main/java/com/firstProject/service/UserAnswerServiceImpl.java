@@ -96,12 +96,6 @@ public class UserAnswerServiceImpl implements UserAnswerService {
         return userAnswerRepository.getUsersAnsweredCountByQuestionId(questionId);
     }
 
-
-    @Override
-    public User getUserById(Long userId) {
-        return userAnswerRepository.getUserById(userId);
-    }
-
     @Override
     public List<UserAnswerResponse> getAllUserAnswers(Long userId) {
         List<UserAnswerResponse> responseList=new ArrayList<>();
@@ -130,17 +124,13 @@ public class UserAnswerServiceImpl implements UserAnswerService {
                 SelectedQuestionOptionResponse response= getUsersChoseQuestionOptionNumber(question.getQuestion().getId());
                 questionsResponse.add(response);
             }catch (Exception err){
-
             }
         }
         return questionsResponse;
     }
 
-    private User getUserByEmail(String email) {
-        return userServiceClient.getUserByEmail(email);
-    }
 
-    private boolean hasUserAnsweredQuestion(Long userId, Long questionId) {
+    public Boolean hasUserAnsweredQuestion(Long userId, Long questionId) {
         ResponseEntity<User> userResponse = userServiceClient.getUserById(userId);
         if (userResponse.getStatusCode() == HttpStatus.OK) {
             User user = userResponse.getBody();
@@ -153,4 +143,19 @@ public class UserAnswerServiceImpl implements UserAnswerService {
         }
         return false;
     }
+
+
+    @Override
+    public User getUserById(Long userId) {
+        User user = userServiceClient.getUserById(userId).getBody();
+        if (user != null) {
+            return userAnswerRepository.getUserById(userId);
+        }
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Boolean> isRegistered(Long userId) {
+        ResponseEntity<Boolean> isUserRegisteredResponse = userServiceClient.isRegistered(userId);
+        return ResponseEntity.ok(isUserRegisteredResponse.getBody());    }
 }
