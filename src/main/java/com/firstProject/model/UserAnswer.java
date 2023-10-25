@@ -50,4 +50,13 @@ public class UserAnswer {
     public void setSelectedOptionId(Long selectedOptionId) {
         this.selectedOptionId = selectedOptionId;
     }
+
+    public UserAnswer toUserAnswer() {
+        return new UserAnswer(
+                null,
+                this.userId,
+                this.questionId,
+                this.selectedOptionId
+        );
+    }
 }

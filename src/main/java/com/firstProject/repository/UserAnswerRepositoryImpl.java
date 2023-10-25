@@ -6,12 +6,7 @@ import com.firstProject.repository.mapper.UserAnswerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.List;
 
 @Repository
@@ -22,28 +17,34 @@ public class UserAnswerRepositoryImpl implements UserAnswerRepository {
 
 
     @Override
-    public Long createUserAnswer(UserAnswer userAnswer) {
-        String sql = "INSERT INTO " + TABLE_NAME_USER_ANSWER + " " + "(user_id, question_id, selected_option_id) VALUES (?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{" ID"});
-            ((PreparedStatement) ps).setLong(1, userAnswer.getUserId());
-            return ps;
-            }, keyHolder);
-        return keyHolder.getKey().longValue();
+    public UserAnswerResponse createUserAnswer(UserAnswer userAnswer) {
+        if (userAnswer != null && userAnswer.getUserId() != null) {
+            User user = getUserById(userAnswer.getUserId());
+            if (user != null) {
+                String sql = "INSERT INTO " + TABLE_NAME_USER_ANSWER + " (user_id, question_id, selected_option_id) VALUES (?, ?, ?)";
+                jdbcTemplate.update(sql, user, userAnswer.getQuestionId(), userAnswer.getSelectedOptionId());
+                UserAnswerResponse answerResponse = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", UserAnswerResponse.class);
+                return answerResponse;
+            } else {
+                // טפל במקרה שבו המשתמש לא נמצא
+                return null; // או משהו אחר בהתאם לדרישות השלב הבא של האפליקציה
+            }
+        }
+        return null;
     }
+
     @Override
     public void updateUserAnswer(UserAnswer userAnswer) {
-        String sql="UPDATE "+ TABLE_NAME_USER_ANSWER +" SET selected_option_id=? WHERE id=?";
+        String sql="UPDATE "+ TABLE_NAME_USER_ANSWER +" SET selected_option_id=? WHERE user_id=? AND question_id=?";
         jdbcTemplate.update(sql,
-                userAnswer.getSelectedOptionId(),
+               userAnswer.getSelectedOptionId(),
                 userAnswer.getId());
     }
 
     @Override
-    public void deleteUserAnswerById(Long id) {
+    public void deleteUserAnswerById(Long userId) {
         String sql="DELETE FROM "+ TABLE_NAME_USER_ANSWER +" WHERE id=?";
-        jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, userId);
     }
     @Override
     public List<SelectedOptionToMapper> getUsersChoseQuestionOptionNumber(Long questionId) {
@@ -75,24 +76,8 @@ public class UserAnswerRepositoryImpl implements UserAnswerRepository {
     }
 
     @Override
-    public ResponseEntity<User> getUserByEmail(String email) {
-        return null;
-    }
-    @Override
-    public boolean checkIfUserAnsweredQuestionByUserIdAndQuestionId(Long userId, Long questionId) {
-        String sql="SELECT * FROM "+ TABLE_NAME_USER_ANSWER +" WHERE user_id=? AND question_id=?";
-        try{
-            UserAnswer userAnswer =jdbcTemplate.queryForObject(sql,
-                    new UserAnswerMapper(),
-                    userId,
-                    questionId);
-            if(userAnswer !=null){
-                return true;
-            }
-        }catch (Exception err){
-            return false;
-        }
-        return false;
+    public User getUserById(Long userId) {
+        return getUserById(userId);
     }
 
 }

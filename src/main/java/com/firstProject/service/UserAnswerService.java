@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface UserAnswerService {
-        void createUserAnswer(UserAnswerRequest userAnswerRequest);
-        void updateUserAnswer(UserAnswerRequest userAnswerRequest);
+        ResponseEntity<String> createUserAnswer(UserAnswerRequest userAnswerRequest);
+        void updateUserAnswer(UserAnswer userAnswer);
         void deleteUserAnswer(Long id);
         void deleteQuestionAnswerByUserId(Long userId);
 
@@ -16,9 +16,5 @@ public interface UserAnswerService {
         List<UserAnswerResponse> getAllUserAnswers(Long userId);
         Integer getNumberOfQuestionsUserAnswered(Long userId);
         List<SelectedQuestionOptionResponse> getAllQuestionsAndAnswerSelectedCount();
-
-
-
-        Boolean checkIfUserAnsweredQuestionByUserIdAndQuestionId(Long userId,Long questionId);
-        ResponseEntity<User> getUserByEmail(String email);
+        User getUserById(Long userId);
 }

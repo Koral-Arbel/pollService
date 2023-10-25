@@ -15,7 +15,9 @@ public class UserAnswerRequest {
         this.questionOptionRequest = questionOptionRequest;
         this.option = option;
     }
-    public UserAnswerRequest(){}
+
+    public UserAnswerRequest() {
+    }
 
     public Long getId() {
         return id;
@@ -44,12 +46,8 @@ public class UserAnswerRequest {
     public void setQuestionOptionRequest(QuestionOptionRequest questionOptionRequest) {
         this.questionOptionRequest = questionOptionRequest;
     }
+
     public void setOption(Option option) {
         this.option = option;
     }
-
-
-    public UserAnswer toUserAnswer(Long userId,Long questionId,Long optionId){
-        return new UserAnswer(this.id,userId,questionId,optionId);
     }
-}

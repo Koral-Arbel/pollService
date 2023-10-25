@@ -4,6 +4,7 @@ import com.firstProject.model.*;
 import com.firstProject.repository.UserAnswerRepositoryImpl;
 import com.firstProject.userService.UserServiceClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -23,30 +24,40 @@ public class UserAnswerServiceImpl implements UserAnswerService {
 
 
     @Override
-    public void createUserAnswer(UserAnswerRequest userAnswerRequest) {
-        User user = userServiceClient.getUserByEmail(userAnswerRequest.getEmail()).getBody();
+    public ResponseEntity<String> createUserAnswer(UserAnswerRequest userAnswerRequest) {
+        Long userId = userAnswerRequest.getId();
+        ResponseEntity<User> userIdRegistrationResponse = userServiceClient.getUserById(userId);
 
-        if(!checkIfUserAnsweredQuestionByUserIdAndQuestionId(user.getId(),userAnswerRequest.getQuestionOptionRequest().getQuestion().getId())) {
-            boolean isRegistered = userServiceClient.getUserByEmail(userAnswerRequest.getEmail()).hasBody(); // נשתמש ישירות בערך במשתנה בוליאני
+        if (userIdRegistrationResponse.getStatusCode() == HttpStatus.OK) {
+            User isRegistered = userIdRegistrationResponse.getBody();
+            if (isRegistered.getId().equals(userId)){
+                if (hasUserAnsweredQuestion(userId,1L)) {
+                    return ResponseEntity.badRequest().body("User has already answered this question.");
+                }
 
-            if (isRegistered) {
-                userAnswerRepository.createUserAnswer(userAnswerRequest.toUserAnswer(
-                        user.getId(),
-                        userAnswerRequest.getQuestionOptionRequest().getQuestion().getId(),
-                        userAnswerRequest.getOption().getId()
-                ));
+                UserAnswer userAnswer = new UserAnswer();
+                userAnswer.setId(userId);
+                userAnswer.setQuestionId(1L);
+                userAnswer.setSelectedOptionId(2L);
+
+                UserAnswerResponse answerResponse = userAnswerRepository.createUserAnswer(userAnswer);
+
+                if (answerResponse != null) {
+                    return ResponseEntity.ok("User Answer created with ID: " + answerResponse.getSelectedAnswer());
+                } else {
+                    return ResponseEntity.badRequest().body("Failed to create User Answer.");
+                }
+            } else {
+                return ResponseEntity.badRequest().body("User is not registered. Register to be able to answer a question.");
             }
+        } else {
+            return ResponseEntity.badRequest().body("User not found.");
         }
     }
 
     @Override
-    public void updateUserAnswer(UserAnswerRequest userAnswerRequest) {
-        User user = userServiceClient.getUserByEmail(userAnswerRequest.getEmail()).getBody();
-        userAnswerRepository.updateUserAnswer(userAnswerRequest.toUserAnswer(
-                user.getId(),
-                userAnswerRequest.getOption().getQuestionId(),
-                userAnswerRequest.getOption().getId()
-        ));
+    public void updateUserAnswer(UserAnswer userAnswer) {
+        userAnswerRepository.updateUserAnswer(userAnswer);
     }
 
     @Override
@@ -87,13 +98,8 @@ public class UserAnswerServiceImpl implements UserAnswerService {
 
 
     @Override
-    public ResponseEntity<User> getUserByEmail(String email) {
-        return userAnswerRepository.getUserByEmail(email);
-    }
-
-    @Override
-    public Boolean checkIfUserAnsweredQuestionByUserIdAndQuestionId(Long userId, Long questionId) {
-        return userAnswerRepository.checkIfUserAnsweredQuestionByUserIdAndQuestionId(userId, questionId);
+    public User getUserById(Long userId) {
+        return userAnswerRepository.getUserById(userId);
     }
 
     @Override
@@ -128,5 +134,23 @@ public class UserAnswerServiceImpl implements UserAnswerService {
             }
         }
         return questionsResponse;
+    }
+
+    private User getUserByEmail(String email) {
+        return userServiceClient.getUserByEmail(email);
+    }
+
+    private boolean hasUserAnsweredQuestion(Long userId, Long questionId) {
+        ResponseEntity<User> userResponse = userServiceClient.getUserById(userId);
+        if (userResponse.getStatusCode() == HttpStatus.OK) {
+            User user = userResponse.getBody();
+            List<UserAnswer> userAnswers = userAnswerRepository.getAllUserAnswers(user.getId());
+            for (UserAnswer userAnswer : userAnswers) {
+                if (userAnswer.getQuestionId().equals(questionId)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

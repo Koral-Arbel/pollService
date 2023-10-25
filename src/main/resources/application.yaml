@@ -13,13 +13,7 @@ spring:
     console:
       enabled: true
 
-
-externalApi:
-  userService:
-    url: localhost:8082
+UserServiceClient:
+  url: http://localhost:8082
 
 
-redis:
-  host: localhost
-  port: 6380
-  ttl: 1000

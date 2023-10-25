@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS poll_options;
 DROP TABLE IF EXISTS user_answers;
 
 CREATE TABLE poll_question (
-   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+   id int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
    title VARCHAR(100) NOT NULL DEFAULT '',
    PRIMARY KEY (id)
 );
@@ -11,19 +11,19 @@ CREATE TABLE poll_question (
 CREATE TABLE poll_options (
    id int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
    text_option VARCHAR(100) NOT NULL DEFAULT '',
-   question_id INT(11) UNSIGNED NOT NULL,
+   question_id int(11) UNSIGNED NOT NULL,
    PRIMARY KEY (id),
-   FOREIGN KEY (question_id) REFERENCES poll_question (id)
+   FOREIGN KEY (question_id) REFERENCES poll_question(id)
 );
 
 CREATE TABLE user_answers (
-   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-   user_id INT UNSIGNED NOT NULL,
-   question_id INT UNSIGNED NOT NULL,
-   selected_option_id INT UNSIGNED NOT NULL,
+   id int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+   user_id int(11) UNSIGNED NOT NULL,
+   question_id int(11) UNSIGNED NOT NULL,
+   selected_option_id int(11) UNSIGNED NOT NULL,
    PRIMARY KEY (id),
-   FOREIGN KEY (question_id) REFERENCES poll_question (id),
-   FOREIGN KEY (selected_option_id) REFERENCES poll_options (id)
+   FOREIGN KEY (question_id) REFERENCES poll_question(id),
+   FOREIGN KEY (selected_option_id) REFERENCES poll_options(id)
 );
 
 INSERT INTO poll_question (title) VALUES
