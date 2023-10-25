@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface UserAnswerService {
-        ResponseEntity<String> createUserAnswer(UserAnswerRequest userAnswerRequest);
+        void createUserAnswer(UserAnswer userAnswer);
         void updateUserAnswer(UserAnswer userAnswer);
         void deleteUserAnswer(Long id);
         void deleteQuestionAnswerByUserId(Long userId);

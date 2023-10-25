@@ -23,8 +23,8 @@ public class UserAnswerController {
     UserAnswerRepository userAnswerRepository;
 
     @PostMapping(value = "/create")
-    public ResponseEntity<String> createUserAnswer(@RequestBody UserAnswerRequest userAnswerRequest) {
-        return userAnswerService.createUserAnswer(userAnswerRequest);
+    public void createUserAnswer(@RequestBody UserAnswer userAnswer) {
+        userAnswerService.createUserAnswer(userAnswer);
     }
 
     @PutMapping(value = "/update/{userAnswerId}")
@@ -62,12 +62,12 @@ public class UserAnswerController {
         return userAnswerService.getAllQuestionsAndAnswerSelectedCount();
     }
 
-    @GetMapping(value = "/getUserById/{userId}")
+    @GetMapping("/user/getUserById/{userId}")
     public ResponseEntity<User> getUserById(@PathVariable Long userId) {
         return userServiceClient.getUserById(userId);
     }
 
-    @GetMapping("/isRegistered/{userId}")
+    @GetMapping("/user/isRegistered/{userId}")
     public ResponseEntity<Boolean> isRegistered(@PathVariable Long userId) {
         ResponseEntity<Boolean> isUserRegisteredResponse = userAnswerService.isRegistered(userId);
         return ResponseEntity.ok(isUserRegisteredResponse.getBody());

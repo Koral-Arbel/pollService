@@ -17,4 +17,5 @@ public interface UserAnswerRepository {
     Boolean hasUserAnsweredQuestion(Long userId, Long questionId);
     User getUserById(Long userId);
 
+
 }

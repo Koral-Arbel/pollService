@@ -24,35 +24,25 @@ public class UserAnswerServiceImpl implements UserAnswerService {
 
 
     @Override
-    public ResponseEntity<String> createUserAnswer(UserAnswerRequest userAnswerRequest) {
-        Long userId = userAnswerRequest.getId();
-        ResponseEntity<User> userIdRegistrationResponse = userServiceClient.getUserById(userId);
-
-        if (userIdRegistrationResponse.getStatusCode() == HttpStatus.OK) {
-            User isRegistered = userIdRegistrationResponse.getBody();
-            if (isRegistered.getId().equals(userId)){
-                if (hasUserAnsweredQuestion(userId,1L)) {
-                    return ResponseEntity.badRequest().body("User has already answered this question.");
-                }
-
-                UserAnswer userAnswer = new UserAnswer();
-                userAnswer.setId(userId);
-                userAnswer.setQuestionId(1L);
-                userAnswer.setSelectedOptionId(2L);
-
-                UserAnswerResponse answerResponse = userAnswerRepository.createUserAnswer(userAnswer);
-
-                if (answerResponse != null) {
-                    return ResponseEntity.ok("User Answer created with ID: " + answerResponse.getSelectedAnswer());
-                } else {
-                    return ResponseEntity.badRequest().body("Failed to create User Answer.");
-                }
-            } else {
-                return ResponseEntity.badRequest().body("User is not registered. Register to be able to answer a question.");
-            }
-        } else {
-            return ResponseEntity.badRequest().body("User not found.");
+    public void createUserAnswer(UserAnswer userAnswer) {
+        ResponseEntity<Boolean> isRegisteredResponse = userServiceClient.isRegistered(userAnswer.getUserId());
+        if (isRegisteredResponse.getStatusCode() != HttpStatus.OK || !isRegisteredResponse.getBody()) {
+            throw new IllegalArgumentException("User is not registered.");
         }
+
+        // Check if the user has already answered the question
+        if (userAnswerRepository.hasUserAnsweredQuestion(userAnswer.getUserId(), userAnswer.getQuestionId())) {
+            throw new IllegalArgumentException("User has already answered this question.");
+        }
+
+        // Create the UserAnswer object and store it
+        UserAnswer userAnswerResponse = new UserAnswer();
+        userAnswerResponse.setId(userAnswer.getId());
+        userAnswerResponse.setUserId(userAnswer.getUserId());
+        userAnswerResponse.setQuestionId(userAnswer.getQuestionId());
+        userAnswerResponse.setSelectedOptionId(userAnswer.getSelectedOptionId());
+
+        userAnswerRepository.createUserAnswer(userAnswerResponse);
     }
 
     @Override
@@ -156,6 +146,6 @@ public class UserAnswerServiceImpl implements UserAnswerService {
 
     @Override
     public ResponseEntity<Boolean> isRegistered(Long userId) {
-        ResponseEntity<Boolean> isUserRegisteredResponse = userServiceClient.isRegistered(userId);
-        return ResponseEntity.ok(isUserRegisteredResponse.getBody());    }
+        return userServiceClient.isRegistered(userId);
+    }
 }

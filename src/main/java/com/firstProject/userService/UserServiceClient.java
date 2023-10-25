@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
         url = "${UserServiceClient.url}"
 )
 public interface UserServiceClient {
-    @GetMapping(value = "/user/getUserById/{userId}")
+    @GetMapping("/user/getUserById/{userId}")
     ResponseEntity<User> getUserById(@PathVariable Long userId);
     @GetMapping("/user/isRegistered/{userId}")
     ResponseEntity<Boolean> isRegistered(@PathVariable Long userId);
