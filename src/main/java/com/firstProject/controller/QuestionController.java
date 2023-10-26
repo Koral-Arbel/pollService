@@ -35,7 +35,7 @@ public class QuestionController {
         return questionService.getQuestionById(questionId);
     }
 
-    @GetMapping(value = "/all")
+    @GetMapping(value = "/allPoll")
     public List<QuestionOptionResponse> getAllPoll(){
         return questionService.getAllPoll();
     }

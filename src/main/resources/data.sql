@@ -26,22 +26,28 @@ CREATE TABLE user_answers (
    FOREIGN KEY (selected_option_id) REFERENCES poll_options(id)
 );
 
-INSERT INTO poll_question (title) VALUES
-('Between the following, what do you most love to do?'),
-('Where is your preferred place to travel');
 
+
+INSERT INTO poll_question (title) VALUES
+('Between the following, what do you most love to do?');
 INSERT INTO poll_options (text_option, question_id)
 VALUES ('Watch TV', 1);
-
 INSERT INTO poll_options (text_option, question_id)
 VALUES ('Play the computer', 1);
-
 INSERT INTO poll_options (text_option, question_id)
 VALUES ('Hanging out with friends', 1);
-
 INSERT INTO poll_options (text_option, question_id)
 VALUES ('Travel the world', 1);
 
---INSERT INTO poll_options (option_1, option_2, option_3, option_4, question_id) VALUES
---('', 'b. Play the computer', '', ', 1),
---('a. USA', 'b. France', 'c. South America', 'd. Thailand', 2);
+INSERT INTO poll_question (title) VALUES
+('Where is your preferred place to travel');
+INSERT INTO poll_options (text_option, question_id)
+VALUES ('USA', 2);
+INSERT INTO poll_options (text_option, question_id)
+VALUES ('France', 2);
+INSERT INTO poll_options (text_option, question_id)
+VALUES ('South America', 2);
+INSERT INTO poll_options (text_option, question_id)
+VALUES ('Thailand', 2);
+
+

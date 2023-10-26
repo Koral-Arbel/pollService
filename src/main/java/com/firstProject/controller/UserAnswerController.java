@@ -22,42 +22,42 @@ public class UserAnswerController {
     @Autowired
     UserAnswerRepository userAnswerRepository;
 
-    @PostMapping(value = "/create")
+    @PostMapping("/create")
     public void createUserAnswer(@RequestBody UserAnswer userAnswer) {
         userAnswerService.createUserAnswer(userAnswer);
     }
 
-    @PutMapping(value = "/update/{userAnswerId}")
+    @PutMapping("/update/{userId}")
     public void updateUserQuestionAnswer(@RequestBody UserAnswer userAnswer) {
         userAnswerService.updateUserAnswer(userAnswer);
     }
 
-    @DeleteMapping(value = "/delete/{userAnswerId}")
-    public void deleteUserAnswerById(@PathVariable Long id) {
-        userAnswerService.deleteUserAnswer(id);
+    @DeleteMapping("user/deleteUser/{userId}")
+    public void deleteUserAnswerById(@PathVariable Long userId) {
+        userAnswerService.deleteUserAnswerById(userId);
     }
 
-    @GetMapping(value = "/answerUserCount/{questionId}")
+    @GetMapping("/answerUserCount/{questionId}")
     public SelectedQuestionOptionResponse getUsersChoseAnswerByQuestionId(@PathVariable Long questionId) {
         return userAnswerService.getUsersChoseQuestionOptionNumber(questionId);
     }
 
-    @GetMapping(value = "/getUsersAnsweredNumber/{questionId}")
+    @GetMapping("/getUsersAnsweredNumber/{questionId}")
     public String getNumberOfUsersAnsweredQuestionByQuestionId(@PathVariable Long questionId) {
         return userAnswerService.getUsersAnsweredCountByQuestionId(questionId) + " users have answered this question number " + questionId;
     }
 
-    @GetMapping(value = "/userAnswersAll/{userId}")
+    @GetMapping("/userAnswersAll/{userId}")
     public List<UserAnswerResponse> getAllUserAnswers(@PathVariable Long userId) {
         return userAnswerService.getAllUserAnswers(userId);
     }
 
-    @GetMapping(value = "/questionsNumber/{userId}")
+    @GetMapping("/questionsNumber/{userId}")
     public String getNumberOfQuestionsUserAnsweredByUserId(@PathVariable Long userId) {
         return "This user has answered " + userAnswerService.getNumberOfQuestionsUserAnswered(userId) + " questions.";
     }
 
-    @GetMapping(value = "/allQuestionsAnswersCounter")
+    @GetMapping("/allQuestionsAnswersCounter")
     public List<SelectedQuestionOptionResponse> getAllQuestionsAndAnswerSelectedCount() {
         return userAnswerService.getAllQuestionsAndAnswerSelectedCount();
     }

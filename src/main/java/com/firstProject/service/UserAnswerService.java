@@ -8,9 +8,7 @@ import java.util.List;
 public interface UserAnswerService {
         void createUserAnswer(UserAnswer userAnswer);
         void updateUserAnswer(UserAnswer userAnswer);
-        void deleteUserAnswer(Long id);
-        void deleteQuestionAnswerByUserId(Long userId);
-
+        void deleteUserAnswerById(Long userId);
         SelectedQuestionOptionResponse getUsersChoseQuestionOptionNumber(Long questionId);
         Integer getUsersAnsweredCountByQuestionId(Long questionId);
         List<UserAnswerResponse> getAllUserAnswers(Long userId);

@@ -69,16 +69,12 @@ public class PollQuestionServiceImpl implements PollQuestionService {
     public List<QuestionOptionResponse> getAllPoll() {
         List<QuestionOptionResponse> responses = new ArrayList<>();
         List<Question> questions = questionRepository.getAllPoll();
-
-        // אם אין שאלות במערכת, יצור שאלות מראש
         if (questions.isEmpty()) {
             List<QuestionOptionRequest> list = createQuestionsAndAnswers();
             for (QuestionOptionRequest request : list) {
                 createQuestion(request);
             }
         }
-
-        // שחזור כל השאלות עם האפשרויות שלהן
         for (Question question : questions) {
             List<Option> options = optionService.getOptionsByQuestionId(question.getId());
             responses.add(question.toQuestionOptionResponse(question, options));
