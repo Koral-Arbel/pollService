@@ -1,7 +1,6 @@
 package com.firstProject.controller;
 
 import com.firstProject.model.*;
-import com.firstProject.repository.UserAnswerRepository;
 import com.firstProject.service.UserAnswerService;
 import com.firstProject.userService.UserServiceClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +18,6 @@ public class UserAnswerController {
     UserAnswerService userAnswerService;
     @Autowired
     UserServiceClient userServiceClient;
-    @Autowired
-    UserAnswerRepository userAnswerRepository;
 
     @PostMapping("/create")
     public void createUserAnswer(@RequestBody UserAnswer userAnswer) {
@@ -36,7 +33,6 @@ public class UserAnswerController {
     public void deleteUserAnswerById(@PathVariable Long userId) {
         userAnswerService.deleteUserAnswerById(userId);
     }
-
     @GetMapping("/answerUserCount/{questionId}")
     public SelectedQuestionOptionResponse getUsersChoseAnswerByQuestionId(@PathVariable Long questionId) {
         return userAnswerService.getUsersChoseQuestionOptionNumber(questionId);

@@ -28,13 +28,9 @@ public class UserAnswerServiceImpl implements UserAnswerService {
         if (isRegisteredResponse.getStatusCode() != HttpStatus.OK || !isRegisteredResponse.getBody()) {
             throw new IllegalArgumentException("User is not registered.");
         }
-
-        // Check if the user has already answered the question
         if (userAnswerRepository.hasUserAnsweredQuestion(userAnswer.getUserId(), userAnswer.getQuestionId())) {
             throw new IllegalArgumentException("User has already answered this question.");
         }
-
-        // Create the UserAnswer object and store it
         UserAnswer userAnswerResponse = new UserAnswer();
         userAnswerResponse.setId(userAnswer.getId());
         userAnswerResponse.setUserId(userAnswer.getUserId());
@@ -55,7 +51,6 @@ public class UserAnswerServiceImpl implements UserAnswerService {
         for (UserAnswer userAnswer : userAnswers) {
             userAnswerRepository.deleteUserAnswerById(userAnswer.getId());
         }
-        userServiceClient.deleteUserAnswerById(userId);
     }
 
     @Override
