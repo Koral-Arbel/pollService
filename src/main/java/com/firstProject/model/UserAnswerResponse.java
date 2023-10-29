@@ -35,6 +35,4 @@ public class UserAnswerResponse {
     public void setSelectedAnswer(String selectedAnswer) {
         this.selectedAnswer = selectedAnswer;
     }
-
-
 }

@@ -9,8 +9,7 @@ public class UserAnswer {
     private Long questionId;
     private Long selectedOptionId;
 
-    public UserAnswer() {
-    }
+    public UserAnswer() {}
 
     public UserAnswer(Long id, Long userId, Long questionId, Long selectedOptionId) {
         this.id = id;
