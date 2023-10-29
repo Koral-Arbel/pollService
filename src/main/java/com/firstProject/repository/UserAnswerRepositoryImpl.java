@@ -24,19 +24,8 @@ public class UserAnswerRepositoryImpl implements UserAnswerRepository {
     @Override
     public UserAnswerResponse createUserAnswer(UserAnswer userAnswer) {
         String sql = "INSERT INTO " + TABLE_NAME_USER_ANSWER + " (user_id, question_id, selected_option_id) VALUES (?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder(); // KeyHolder לקבלת המזהה הראשון
-
-        // הוספת המשתמש וקבלת המזהה שנוצר
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setLong(1, userAnswer.getUserId());
-            ps.setLong(2, userAnswer.getQuestionId());
-            ps.setLong(3, userAnswer.getSelectedOptionId());
-            return ps;
-        }, keyHolder);
-
-        // אפשר לשים בדפנדנסי Injection של המזהה
-        Long lastInsertedId = keyHolder.getKey().longValue();
+        jdbcTemplate.update(sql, userAnswer.getUserId(), userAnswer.getQuestionId(), userAnswer.getSelectedOptionId());
+        Long lastInsertedId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
         UserAnswerResponse answerResponse = new UserAnswerResponse();
         answerResponse.setId(lastInsertedId);
         System.out.println("User answer saved in the database");

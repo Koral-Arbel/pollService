@@ -29,10 +29,11 @@ public class UserAnswerController {
         userAnswerService.updateUserAnswer(userAnswer);
     }
 
-    @DeleteMapping("user/deleteUser/{userId}")
+    @DeleteMapping("/deleteUser/{userId}")
     public void deleteUserAnswerById(@PathVariable Long userId) {
         userAnswerService.deleteUserAnswerById(userId);
     }
+
     @GetMapping("/answerUserCount/{questionId}")
     public SelectedQuestionOptionResponse getUsersChoseAnswerByQuestionId(@PathVariable Long questionId) {
         return userAnswerService.getUsersChoseQuestionOptionNumber(questionId);

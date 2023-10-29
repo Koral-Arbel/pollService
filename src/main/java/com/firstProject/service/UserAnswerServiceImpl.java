@@ -2,6 +2,7 @@ package com.firstProject.service;
 
 import com.firstProject.model.*;
 import com.firstProject.repository.UserAnswerRepositoryImpl;
+import com.firstProject.repository.mapper.OptionSelectedMapper;
 import com.firstProject.userService.UserServiceClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserAnswerServiceImpl implements UserAnswerService {
@@ -67,13 +69,15 @@ public class UserAnswerServiceImpl implements UserAnswerService {
         for(int i=0;i<answerChosenToMaps.size();i++){
             Option option = optionService.getOptionById(answerChosenToMaps.get(i).getOptionId());
             for(int x=0;x<answers.size();x++){
-                if(answers.get(x).getTextOption()== option.getTextOption()){
+                if (answers.get(x).getTextOption().equals(option.getTextOption())) {
                     answers.get(x).setSelectedAnswer(answerChosenToMaps.get(i).getAmountAnswersAnswered());
                 }
             }
         }
         return new SelectedQuestionOptionResponse(questionText,answers);
+
     }
+
 
     @Override
     public Integer getUsersAnsweredCountByQuestionId(Long questionId) {
