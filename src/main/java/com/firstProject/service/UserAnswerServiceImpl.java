@@ -57,25 +57,22 @@ public class UserAnswerServiceImpl implements UserAnswerService {
 
     @Override
     public SelectedQuestionOptionResponse getUsersChoseQuestionOptionNumber(Long questionId) {
-        List<SelectedOptionToMapper> answerChosenToMaps= userAnswerRepository.getUsersChoseQuestionOptionNumber(questionId);
-        QuestionOptionResponse question= questionService.getQuestionById(questionId);
-        String questionText=question.getQuestion().getTitle();
-        List<SelectedOption> answers=new ArrayList<>();
-        answers.add(new SelectedOption(question.getOption1().getTextOption(),0));
-        answers.add(new SelectedOption(question.getOption2().getTextOption(),0));
-        answers.add(new SelectedOption(question.getOption3().getTextOption(),0));
-        answers.add(new SelectedOption(question.getOption4().getTextOption(),0));
-
-        for(int i=0;i<answerChosenToMaps.size();i++){
-            Option option = optionService.getOptionById(answerChosenToMaps.get(i).getOptionId());
-            for(int x=0;x<answers.size();x++){
-                if (answers.get(x).getTextOption().equals(option.getTextOption())) {
-                    answers.get(x).setSelectedAnswer(answerChosenToMaps.get(i).getAmountAnswersAnswered());
-                }
-            }
+        List<SelectedOptionToMapper> answerChosenToMaps = userAnswerRepository.getUsersChoseQuestionOptionNumber(questionId);
+        QuestionOptionResponse question = questionService.getQuestionById(questionId);
+        String questionText = question.getQuestion().getTitle();
+        List<SelectedOption> answers = new ArrayList<>();
+        // יצירת מיפוי שמשרה את הטקסט של האופציה כמפתח עם ערך הכמות שנבחרו כערך
+        Map<String, Integer> answerCountMap = new HashMap<>();
+        for (SelectedOptionToMapper answer : answerChosenToMaps) {
+            Option option = optionService.getOptionById(answer.getOptionId());
+            answerCountMap.put(option.getTextOption(), answer.getAmountAnswersAnswered());
         }
-        return new SelectedQuestionOptionResponse(questionText,answers);
-
+        // הוספת האופציות והכמויות לרשימת התשובות
+        answers.add(new SelectedOption(question.getOption1().getTextOption(), answerCountMap.getOrDefault(question.getOption1().getTextOption(), 0)));
+        answers.add(new SelectedOption(question.getOption2().getTextOption(), answerCountMap.getOrDefault(question.getOption2().getTextOption(), 0)));
+        answers.add(new SelectedOption(question.getOption3().getTextOption(), answerCountMap.getOrDefault(question.getOption3().getTextOption(), 0)));
+        answers.add(new SelectedOption(question.getOption4().getTextOption(), answerCountMap.getOrDefault(question.getOption4().getTextOption(), 0)));
+        return new SelectedQuestionOptionResponse(questionText, answers);
     }
 
 

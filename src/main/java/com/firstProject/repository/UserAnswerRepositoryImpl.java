@@ -45,7 +45,7 @@ public class UserAnswerRepositoryImpl implements UserAnswerRepository {
     }
     @Override
     public List<SelectedOptionToMapper> getUsersChoseQuestionOptionNumber(Long questionId) {
-        String sql = "SELECT selected_option_id, COUNT(selected_option_id) AS amount_answers_answered FROM " + TABLE_NAME_USER_ANSWER + " WHERE question_id = ? GROUP BY selected_option_id";
+        String sql = "SELECT selected_option_id, COUNT(selected_option_id) AS amount_answers_answered FROM " + TABLE_NAME_USER_ANSWER + " WHERE question_id=? GROUP BY selected_option_id";
         return jdbcTemplate.query(sql, new OptionSelectedMapper(), questionId);
     }
     @Override
